@@ -27,8 +27,3 @@ services:
       - ./data-kafka-connect/files/aws/credentials:/root/.aws/
     ports:
       - 28083:28083
-
-networks:
-  default:
-    external:
-      name: cicd
