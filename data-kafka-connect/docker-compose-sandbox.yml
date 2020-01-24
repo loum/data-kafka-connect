@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  kafka-connect:
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: b-2.sandbox.spgv3d.c3.kafka.ap-southeast-2.amazonaws.com:9094
+      CONNECT_SECURITY_PROTOCOL: SSL
+      CONNECT_SSL_TRUSTSTORE_LOCATION: /etc/kafka-connect/certs/kafka.client.truststore.jks
+      CONNECT_CONSUMER_SECURITY_PROTOCOL: SSL
+      CONNECT_CONSUMER_SSL_TRUSTSTORE_LOCATION: /etc/kafka-connect/certs/kafka.client.truststore.jks
+      CONNECT_PRODUCER_SECURITY_PROTOCOL: SSL
+      CONNECT_PRODUCER_SSL_TRUSTSTORE_LOCATION: /etc/kafka-connect/certs/kafka.client.truststore.jks
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL:
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL:
+    volumes:
+      - ./files/certs:/etc/kafka-connect/certs

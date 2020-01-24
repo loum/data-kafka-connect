@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+import argparse
+import jinja2
+import json
+import tempfile
+import shutil
+
+
+DESCRIPTION = """Data Kafka Connect pre-image build"""
+
+def main():
+    """Script entry point.
+    """
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
+    parser.add_argument('-e',
+                        '--environment',
+                        action='store',
+                        dest='environment')
+
+    # Prepare the argument list.
+    args = parser.parse_args()
+
+    create_connector_properties(environment=args.environment or 'local')
+
+
+def create_connector_properties(environment='local'):
+    """Build Kafka Connect connector properties files per environment.
+
+    """
+    with open('config/{}/connectors/s3/properties.json'.format(environment)) as _fh:
+        config_map = json.load(_fh)
+
+    file_loader = jinja2.FileSystemLoader('data-kafka-connect/files/connectors/properties')
+    j2_env = jinja2.Environment(loader=file_loader)
+    template = j2_env.get_template('s3.properties.json.j2')
+
+    for connector_name, config in config_map.items():
+        output = template.render(connector_name=connector_name, **config)
+
+        out_fh = tempfile.NamedTemporaryFile()
+        out_fh.write(output.encode())
+        out_fh.flush()
+        shutil.copy(out_fh.name,
+                    './data-kafka-connect/files/connectors/properties/{}.s3.properties.json'.format(connector_name))
+        
+
+if __name__ == '__main__':
+    main()
