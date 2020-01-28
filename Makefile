@@ -37,16 +37,12 @@ endif
 WHEEL=~/wheelhouse
 PYTHONPATH=.
 GIT=$(shell which git 2>/dev/null)
-
-# Define the default test suit to run.
-TESTS=tests
-
-tests:
-	$(shell which py.test) -vv --exitfirst \
-  --pythonwarnings ignore -sv $(TESTS)
-
-docs:
-	$(shell which sphinx-build) -b html doc/source doc/out
+HASH=$(shell $(GIT) rev-parse --short HEAD)
+SERVICE_NAME=data_kafka_connect
+DOCKER_COMPOSE=$(shell which docker-compose 2>/dev/null)
+DOCKER=$(shell which docker 2>/dev/null)
+PIP := $(PYVERSION)env/bin/pip
+PYTHON := $(PYVERSION)env/bin/python
 
 VENV_DIR_EXISTS := $(shell [ -e "${PYVERSION}env" ] && echo 1 || echo 0)
 clear_env:
@@ -55,9 +51,6 @@ ifeq ($(VENV_DIR_EXISTS), 1)
 	$(shell which rm) -fr ${PYVERSION}env
 	@echo \#\#\# ${PYVERSION}env delete done.
 endif
-
-PIP := $(PYVERSION)env/bin/pip
-PYTHON := $(PYVERSION)env/bin/python
 
 init_env:
 	@echo \#\#\# Creating virtual environment ${PYVERSION}env ...
@@ -85,13 +78,6 @@ endif
 
 init: clear_env init_env
 
-init_build: init_env build
-
-build:
-	@echo \#\#\# Building package ...
-	$(PYVERSION)env/bin/python setup.py bdist_wheel -d $(WHEEL)
-	@echo \#\#\# Build done.
-
 py_versions:
 	@echo python3 version: ${PY3_VERSION}
 	@echo python3 minor: ${PY3_VERSION_MINOR}
@@ -105,12 +91,6 @@ print-%:
 
 clean:
 	$(GIT) clean -xdf -e .vagrant -e *.swp -e 2env -e 3env
-
-SERVICE_NAME=data_kafka_connect
-
-# Set globals.
-DOCKER_COMPOSE=$(shell which docker-compose 2>/dev/null)
-DOCKER=$(shell which docker 2>/dev/null)
 
 COMPOSE_FILES = -f $(SERVICE_NAME)/docker-compose.yml
 DEV_COMPOSE_FILES = -f $(SERVICE_NAME)/docker-compose-dev.yml -f $(SERVICE_NAME)/docker-compose-minio.yml
@@ -139,7 +119,7 @@ local-build-down:
       down
 
 local-rmi:
-	@$(DOCKER) rmi data-kafka-connect:${HASH} || true
+	@$(DOCKER) rmi $(SERVICE_NAME):${HASH} || true
 
 
 help:
@@ -154,4 +134,4 @@ help:
 	";
 
 
-.PHONY: tests docs py_versions init build upload help clean
+.PHONY: tests docs py_versions init build upload help clean prebuild
