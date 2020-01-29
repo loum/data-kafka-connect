@@ -1,10 +1,10 @@
 {
-    "cm-clv-mapping-sink": {
-		"tasks_max": 1,
-		"topics": "cm-clv-mapping",
-        "s3_bucket_name": "lfscnpcom-datalake2-local-raw",
-        "topics_dir": "customer_master",
-        "flush_size": 2,
+    "sample-sink-connector": {
+        "tasks_max": 1,
+        "topics": "sample-sink",
+        "s3_bucket_name": "sample-sink-bucket",
+        "topics_dir": "topics-dir",
+        "flush_size": 1,
         "rotate_schedule_interval": 60000,
         "store_url": "http://minio:9000"
     }

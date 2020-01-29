@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-
 import json
-import urllib2
+import urllib.error
+import urllib.request
 import argparse
 import logging
-import backoff
 
 
 DESCRIPTION = """Data Kafka Connect connector bootstrap"""
@@ -18,20 +16,19 @@ def main():
     bootstrap()
 
 
-@backoff.on_exception(backoff.expo, urllib2.URLError, max_time=300)
 def bootstrap():
     """Boostrap Kafka Connect connectors.
 
     """
-    with open('/etc/kafka-connect-s3/lfs/connectors/properties/cm-clv-mapping-sink.s3.properties.json') as _fh:
-        config_map = json.dumps(json.load(_fh))
+    with open('./data_kafka_connect/files/connectors/properties/sample-sink-connector.s3.properties.json') as _fh:
+        config_map = json.dumps(json.load(_fh)).encode('utf-8')
 
     url = 'http://localhost:28083/connectors'
-    req = urllib2.Request(url, config_map, {'Content-Type': 'application/json'})
+    req = urllib.request.Request(url, config_map, {'Content-Type': 'application/json'})
     try:
-        f = urllib2.urlopen(req)
+        f = urllib.request.urlopen(req)
         response = f.read()
-    except urllib2.HTTPError as err:
+    except urllib.error.HTTPError as err:
         logging.error('Kafka Connect boostrap error: %s', err)
     else:
         logging.info('Kafka Connect bootstrap OK: %s', response)

@@ -9,6 +9,8 @@ import setuptools
 PROJECT_NAME = os.path.basename(os.path.abspath(os.curdir))
 
 PROD_PACKAGES = [
+    'backoff',
+    'docker-compose',
     'jinja2',
 ]
 

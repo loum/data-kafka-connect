@@ -1,0 +1,27 @@
+{
+  "schema":
+  "{
+    \"type\": \"record\",
+    \"name\": \"KafkaEvent\",
+    \"namespace\": \"com.lfs.cm.interpreters\",
+    \"fields\": [
+      {
+        \"name\": \"data\",
+        \"type\": {
+          \"type\": \"record\",
+          \"name\": \"SampleMapping\",
+          \"namespace\": \"com.lfs.cm.algebras\",
+          \"fields\": [
+            {
+              \"name\": \"Id\",
+              \"type\": {
+                \"type\": \"string\",
+                \"logicalType\": \"uuid\"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }"
+}

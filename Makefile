@@ -39,7 +39,7 @@ PYTHONPATH=.
 GIT=$(shell which git 2>/dev/null)
 HASH=$(shell $(GIT) rev-parse --short HEAD)
 SERVICE_NAME=data_kafka_connect
-DOCKER_COMPOSE=$(shell which docker-compose 2>/dev/null)
+DOCKER_COMPOSE=$(shell which docker-compose 2>/dev/null || echo "3env/bin/docker-compose")
 DOCKER=$(shell which docker 2>/dev/null)
 PIP := $(PYVERSION)env/bin/pip
 PYTHON := $(PYVERSION)env/bin/python
@@ -64,7 +64,6 @@ ifneq ($(VENV_TOOL),)
 	$(PIP) install --upgrade pip
 	$(PIP) install --upgrade setuptools
 	$(PIP) install wheel
-	# $(PIP) install "requests<=2.21.0"
 	@echo \#\#\# wheel env done.
 
 	@echo \#\#\# Installing package dependencies ...
@@ -101,6 +100,7 @@ local-build-config:
       $(DOCKER_COMPOSE) --project-directory $(SERVICE_NAME) \
       $(COMPOSE_FILES) $(DEV_COMPOSE_FILES) \
       config
+
 prebuild:
 	$(PYTHON) ./prebuild --environment local
 	
@@ -110,6 +110,8 @@ local-build-up: local-build-down prebuild
       $(DOCKER_COMPOSE) --project-directory $(SERVICE_NAME) \
       $(COMPOSE_FILES) $(DEV_COMPOSE_FILES) \
       up -d
+	@$(PYTHON) $(SERVICE_NAME)/scripts/backoff -p 8081 -p 8082 -p 28083
+	@$(PYTHON) $(SERVICE_NAME)/scripts/bootstrap
 
 local-build-down:
 	@SERVICE_NAME=$(SERVICE_NAME) \
@@ -129,8 +131,9 @@ help:
 	local-build-up:       Create a local Kafka Connect pipeline that streams data to an S3-like store (MINIO).\n \
 	local-build-down:     Destroy local Kafka Connect pipeline.\n \
 	local-build-config:   Local Kafka Connect pipeline docker-compose config.\n \
-	print-<var>:        Display the Makefile global variable '<var>' value.\n \
-	clean:              Remove all files not tracked by Git.\n \
+	local-rmi:            Remove local Kafka Connect docker image.\n \
+	print-<var>:          Display the Makefile global variable '<var>' value.\n \
+	clean:                Remove all files not tracked by Git.\n \
 	";
 
 

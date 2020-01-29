@@ -1,0 +1,50 @@
+import sys
+import urllib.request
+import argparse
+import logging
+import backoff
+
+ROOT = logging.getLogger()
+ROOT.setLevel(logging.INFO)
+
+HANDLER = logging.StreamHandler(sys.stdout)
+HANDLER.setLevel(logging.INFO)
+FORMATTER = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s: %(message)s')
+HANDLER.setFormatter(FORMATTER)
+ROOT.addHandler(HANDLER)
+
+
+DESCRIPTION = """Backoff until all ports ready"""
+
+def main():
+    """Script entry point.
+    """
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
+    parser.add_argument('-p', '--port',
+                        action='append',
+                        help='Backoff port number until ready',
+                        required=True)
+
+    args = parser.parse_args()
+
+    for port in args.port:
+        _backoff(port)
+
+
+@backoff.on_exception(backoff.expo,
+					  ConnectionResetError,
+                      max_time=300)
+def _backoff(port):
+    """Boostrap Kafka Connect connectors.
+
+    """
+    logging.info(f'Checking port {port} is ready ...')
+    url = f'http://localhost:{port}'
+    req = urllib.request.Request(url)
+    f = urllib.request.urlopen(req)
+    logging.info(f'Port {port} OK')
+    f.close()
+
+
+if __name__ == "__main__":
+    main()

@@ -11,4 +11,4 @@ services:
     ports:
       - 9000:9000
     entrypoint: sh
-    command: -c 'mkdir -p /export/lfscnpcom-datalake2-local-raw && /usr/bin/minio server /export'
+    command: -c 'mkdir -p /export/sample-sink-bucket && /usr/bin/minio server /export'
