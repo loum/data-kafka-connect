@@ -38,7 +38,7 @@ WHEEL=~/wheelhouse
 PYTHONPATH=.
 GIT=$(shell which git 2>/dev/null)
 HASH=$(shell $(GIT) rev-parse --short HEAD)
-SERVICE_NAME=data_kafka_connect
+SERVICE_NAME=data-kafka-connect
 DOCKER_COMPOSE=$(shell which docker-compose 2>/dev/null || echo "3env/bin/docker-compose")
 DOCKER=$(shell which docker 2>/dev/null)
 PIP := $(PYVERSION)env/bin/pip
@@ -67,8 +67,8 @@ ifneq ($(VENV_TOOL),)
 	@echo \#\#\# wheel env done.
 
 	@echo \#\#\# Installing package dependencies ...
-	$(PIP) wheel --wheel-dir $(WHEEL) --find-links=$(WHEEL) .
-	$(PIP) install --find-links=$(WHEEL) -e .
+	$(PIP) wheel --wheel-dir $(WHEEL) --find-links=$(WHEEL) --requirement requirement.txt
+	$(PIP) install --find-links=$(WHEEL) --requirement requirement.txt
 	@echo \#\#\# Package install done.
 else
 	@echo \#\#\# Hmmm, cannot find virtual env tool.

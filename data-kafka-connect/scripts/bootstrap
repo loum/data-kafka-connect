@@ -20,7 +20,7 @@ def bootstrap():
     """Boostrap Kafka Connect connectors.
 
     """
-    with open('./data_kafka_connect/files/connectors/properties/sample-sink-connector.s3.properties.json') as _fh:
+    with open('./data-kafka-connect/files/connectors/properties/sample-sink-connector.s3.properties.json') as _fh:
         config_map = json.dumps(json.load(_fh)).encode('utf-8')
 
     url = 'http://localhost:28083/connectors'

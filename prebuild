@@ -29,7 +29,7 @@ def create_connector_properties(environment='local'):
     with open('config/{}/connectors/s3/properties.json'.format(environment)) as _fh:
         config_map = json.load(_fh)
 
-    file_loader = jinja2.FileSystemLoader('data_kafka_connect/files/connectors/properties')
+    file_loader = jinja2.FileSystemLoader('data-kafka-connect/files/connectors/properties')
     j2_env = jinja2.Environment(loader=file_loader)
     template = j2_env.get_template('s3.properties.json.j2')
 
@@ -40,7 +40,7 @@ def create_connector_properties(environment='local'):
         out_fh.write(output.encode())
         out_fh.flush()
         shutil.copy(out_fh.name,
-                    './data_kafka_connect/files/connectors/properties/{}.s3.properties.json'.format(connector_name))
+                    './data-kafka-connect/files/connectors/properties/{}.s3.properties.json'.format(connector_name))
         
 
 if __name__ == '__main__':

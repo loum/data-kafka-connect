@@ -61,7 +61,7 @@ Register the Sample Avro Schema
 The Kafka Schema Registry manages the Avro schema sample Avro messages.  It offers a REST API at port ``8081`` that allows us to register the schema with ``curl``::
 
     $ curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
-      --data @data_kafka_connect/files/schemas/develop/sample-sink-avro-schema.json \
+      --data @data-kafka-connect/files/schemas/develop/sample-sink-avro-schema.json \
       http://localhost:8081/subjects/sample-sink-value/versions
      
     {"id":1}
@@ -145,7 +145,7 @@ Kafka Connect exposes a REST API on port ``28083`` that can be used to interact 
 The ``bootstrap`` facility in the project deployment will creates a Kafka Connect sink into S3.  Bootstrap will simulate the following curl command::
 
     $ curl -X POST -H "Content-Type: application/json" \
-      --data @./data_kafka_connect/files/connectors/properties/sample-sink-connector.s3.properties.json \
+      --data @./data-kafka-connect/files/connectors/properties/sample-sink-connector.s3.properties.json \
       http://localhost:28083/connectors | jq .
      
     {
