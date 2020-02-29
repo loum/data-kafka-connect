@@ -19,32 +19,40 @@ Kafka Connect provides:
 *************
 Prerequisites
 *************
+
 * `Docker <https://docs.docker.com/install/>`_
 
 ***************
 Getting Started
 ***************
+
 Get the code::
 
-    $ git clone https://github.com/loum/data-kafka-connect
+    $ git clone https://github.com/loum/data-kafka-connect && cd data-kafka-connect
 
-Change into the top-level project directory::
+.. note::
 
-    $ cd data-kafka-connect
+    Run all commands from the top-level directory of the `git` repository.
 
-Getting Help at any Time
-========================
+Get the `Makester project <https://github.com/loum/makester.git>`_::
 
-Display the `Makefile` help::
+    $ git submodule update --remote --merge
+
+************
+Getting Help
+************
+
+There should be a `make` target to be able to get most things done.  Check the help for more information::
 
     $ make help
-
-Build the Kafka Connect Environment
-===================================
 
 ********************
 Development Pipeline
 ********************
+
+Setup the environment::
+
+    $ make init
 
 The following example demonstrates how we can stream data from Kafka into S3 using an Apache Kafka Connect.
 
@@ -53,7 +61,7 @@ Kafka to S3 Workflow
 
 Bring up the cluster with a Kafka Conenct worker in distributed mode::
 
-    $ make init
+    $ make local-build-up
 
 Register the Sample Avro Schema
 ===============================
