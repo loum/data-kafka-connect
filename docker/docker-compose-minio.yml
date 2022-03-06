@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  # More at https://docs.min.io/docs/minio-docker-quickstart-guide.html
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: "00000000000000000000"
+      MINIO_ROOT_PASSWORD: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN"
+    volumes:
+      - minio-kafka:/export/
+    ports:
+      - 9000:9000
+      - 9001:9001
+    entrypoint: sh
+    command: -c 'mkdir /export/sample-sink-bucket && /opt/bin/minio server /export --console-address ":9001"'
+
+volumes:
+  minio-kafka:
+    external: false
